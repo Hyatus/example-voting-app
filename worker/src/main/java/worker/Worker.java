@@ -45,22 +45,27 @@ class Worker {
     }
   }
 
-  static Jedis connectToRedis(String host) {
-    Jedis conn = new Jedis(host);
+static Jedis connectToRedis(String host) {
+  String password = "redis_password";
+  Jedis conn = new Jedis(host, 6379);
 
-    while (true) {
-      try {
-        conn.keys("*");
-        break;
-      } catch (JedisConnectionException e) {
-        System.err.println("Waiting for redis");
-        sleep(1000);
-      }
-    }
-
-    System.err.println("Connected to redis");
-    return conn;
+  if (password != null && !password.isEmpty()) {
+    conn.auth(password);
   }
+
+  while (true) {
+    try {
+      conn.ping();
+      break;
+    } catch (JedisConnectionException e) {
+      System.err.println("Waiting for redis");
+      sleep(1000);
+    }
+  }
+
+  System.err.println("Connected to redis");
+  return conn;
+}
 
   static Connection connectToDB(String host) throws SQLException {
     Connection conn = null;
