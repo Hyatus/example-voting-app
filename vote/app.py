@@ -9,7 +9,6 @@ import logging
 option_a = os.getenv('OPTION_A', "Cats")
 option_b = os.getenv('OPTION_B', "Dogs")
 redis_password = os.getenv('REDIS_PASSWORD',"Dogs")
-redis_user = os.getenv('REDIS_USERNAME','default')
 hostname = socket.gethostname()
 
 app = Flask(__name__)
@@ -20,7 +19,7 @@ app.logger.setLevel(logging.INFO)
 
 def get_redis():
     if not hasattr(g, 'redis'):
-        g.redis = Redis(host="redis", db=0, socket_timeout=5,password=redis_password,username=redis_user)
+        g.redis = Redis(host="redis", db=0, socket_timeout=5,password=redis_password)
     return g.redis
 
 @app.route("/", methods=['POST','GET'])
